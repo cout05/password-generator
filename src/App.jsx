@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [length, setLength] = useState(0);
   const [password, setPassword] = useState("");
+  const [isCLicked, setIsCLicked] = useState(false);
   const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
   const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const numberChars = "0123456789";
@@ -12,11 +13,22 @@ function App() {
   let randomPassword = "";
 
   const handleClick = (value) => {
+    setIsCLicked(false);
     for (let i = 0; i < value; i++) {
       const randomIndex = Math.floor(Math.random() * charPool.length);
       randomPassword += charPool[randomIndex];
     }
     setPassword(randomPassword);
+  };
+
+  const handleCopyClick = () => {
+    setIsCLicked(true);
+    const textArea = document.createElement("textarea");
+    textArea.value = password;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
   };
 
   return (
@@ -39,15 +51,22 @@ function App() {
             </button>
           </form>
         </div>
-        <div className="password-con mx-auto">
-          <h2 className="text-center">Here's your New Password!</h2>
+        <h2 className="text-center">Your Password goes here ⬇️</h2>
+        <div className="password-con mx-auto d-flex gap-5 align-items-center">
           {password ? (
-            <h3 className="text-center text-success">{password}</h3>
+            <h3 className="bg-light py-1 px-2 rounded rounded-3 text-center text-success">
+              {password}
+            </h3>
           ) : (
             <h3 className="text-center text-warning">
               You haven't Generated one yet😒
             </h3>
           )}
+          {password ? (
+            <button className="btn btn-success " onClick={handleCopyClick}>
+              {isCLicked ? "Copied!" : "Copy"}
+            </button>
+          ) : null}
         </div>
       </div>
     </>
